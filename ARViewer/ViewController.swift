@@ -171,6 +171,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             self.addNewShip()
             self.addNewShip()
             self.addNewShip()
+            self.addNewShip()
             self.GameOverText.text=""
         }
         else{
@@ -224,17 +225,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         
         //let posX:Float = 10.0
-        if(rand>1){
+        if(rand>0.5){
             let posZ = floatBetween(5, and: 10 )
+            let posX = floatBetween(5, and: 10 )
         }
-        else{
+        else if(rand>1){
             let posZ = floatBetween(-5, and: -10)
+            let posX = floatBetween(5, and: 10 )
+        }else if(rand>1.5){
+            let posZ = floatBetween(-5, and: -10)
+            let posX = floatBetween(-5, and: -10 )
+        } else {
+            let posZ = floatBetween(5, and: 10)
+            let posX = floatBetween(-5, and: -10 )
         }
         
-        cubeNode.position = SCNVector3(posZ, 0, posZ) // SceneKit/AR coordinates are in meters was -1
+        cubeNode.position = SCNVector3(posX, 0, posZ) // SceneKit/AR coordinates are in meters was -1
         
       
-        let dir = SCNVector3Make(-posZ / 8, 0, -posZ / 8)
+        let dir = SCNVector3Make(-posX / 8, 0, -posZ / 8)
         
         cubeNode.physicsBody?.applyForce(dir, asImpulse: true)
         //sceneView.scene.rootNode.addChildNode(bulletsNode)

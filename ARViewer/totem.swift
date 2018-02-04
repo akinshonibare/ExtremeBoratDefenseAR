@@ -14,7 +14,7 @@ import SceneKit
 class totem: SCNNode {
     override init() {
         super.init()
-        let box = SCNBox(width: 0.8, height: 5.5, length: 0.8, chamferRadius: 0)
+        let box = SCNBox(width: 0.5, height: 5.5, length: 0.5, chamferRadius: 0)
         self.geometry = box
         let shape = SCNPhysicsShape(geometry: box, options: nil)
         self.physicsBody = SCNPhysicsBody(type: .static, shape: shape)//.dynamic
