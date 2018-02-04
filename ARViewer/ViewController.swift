@@ -17,6 +17,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     @IBOutlet var sceneView: ARSCNView!
     
     @IBOutlet weak var scoreLabel: UILabel!
+    var startedFlag=false
     
     var player: AVAudioPlayer!
     var enemyCount=10;
@@ -25,12 +26,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         didSet {
             // ensure UI update runs on main thread
             DispatchQueue.main.async {
-                self.scoreLabel.text = String(self.userScore)
+                if(self.startedFlag==false){
+                    self.scoreLabel.text="Tap anywhere to start"
+                }
+                else{
+                    self.scoreLabel.text = String(self.userScore)
+                }
             }
         }
     }
     
     var timer = Timer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -49,6 +56,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         sceneView.scene = scene
         sceneView.scene.physicsWorld.contactDelegate = self
         
+        self.addNewShip()
         self.addNewShip()
         
         self.userScore = 0
@@ -136,6 +144,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     @IBAction func didTapScreen(_ sender: UITapGestureRecognizer) { // fire bullet in direction camera is facing
         
+        if(self.startedFlag==false){
+            self.startedFlag=true
+        }
+        else{
         // Play torpedo sound when bullet is launched
         
         self.playSoundEffect(ofType: .torpedo)
@@ -149,8 +161,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         bulletsNode.physicsBody?.applyForce(bulletDirection, asImpulse: true)
         sceneView.scene.rootNode.addChildNode(bulletsNode)
         
-        //addNewShip()
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: {
+            self.removeNodeWithAnimation(bulletsNode, explosion: false)
+        })
+            
+        }
     }
     
     // MARK: - Game Functionality
@@ -177,18 +192,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         enemyCount=enemyCount-1
         let cubeNode = Ship()
         
-        let posX = floatBetween(-1.5, and: 1.5)
+        let posX:Float = 5.0
         //let posX:Float = 10.0
-        let posY = floatBetween(-1.5, and: 1.5  )
-        cubeNode.position = SCNVector3(posX, posY, -1) // SceneKit/AR coordinates are in meters
+        let posZ = floatBetween(-10, and: 10 )
+        cubeNode.position = SCNVector3(posX, 0, posZ) // SceneKit/AR coordinates are in meters was -1
         
-        let (direction, position) = self.getUserVector()
+        //let (direction, pos) = self.getUserVector()
         //cubeNode.position = position // SceneKit/AR coordinates are in meters
+        /*
+        let xVect = posX - pos.x
+        let zVect = posZ - pos.z
+        let dir = SCNVector3Make(xVect, 0, zVect)
+        */
+        let dir = SCNVector3Make(-posX / 5, 0, -posZ / 10)
         
-        let bulletDirection = direction
-        cubeNode.physicsBody?.applyForce(bulletDirection, asImpulse: false)
+        cubeNode.physicsBody?.applyForce(dir, asImpulse: true)
         //sceneView.scene.rootNode.addChildNode(bulletsNode)
-        
+        //session()
         
         sceneView.scene.rootNode.addChildNode(cubeNode)
     }
@@ -236,6 +256,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         //print("did begin contact", contact.nodeA.physicsBody!.categoryBitMask, contact.nodeB.physicsBody!.categoryBitMask)
+        
         if contact.nodeA.physicsBody?.categoryBitMask == CollisionCategory.ship.rawValue || contact.nodeB.physicsBody?.categoryBitMask == CollisionCategory.ship.rawValue { // this conditional is not required--we've used the bit masks to ensure only one type of collision takes place--will be necessary as soon as more collisions are created/enabled
             
             print("Hit ship!")
