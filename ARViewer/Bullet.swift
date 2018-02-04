@@ -21,7 +21,9 @@ class Bullet: SCNNode {
         
         // see http://texnotes.me/post/5/ for details on collisions and bit masks
         self.physicsBody?.categoryBitMask = CollisionCategory.bullets.rawValue
-        //self.physicsBody?.contactTestBitMask = CollisionCategory.ship.rawValue
+        //self.physicsBody?.contactBitMask = [CollisionCategory.ship, CollisionCategory.iceWall].rawValue
+        self.physicsBody?.contactTestBitMask = CollisionCategory.ship.rawValue
+        self.physicsBody?.collisionBitMask = CollisionCategory.ship.rawValue
         
         // add texture
         let material = SCNMaterial()
@@ -33,4 +35,10 @@ class Bullet: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
+/*
+// The physics body-category is a bullet
+self.physicsBody?.categoryBitMask = CollisionCategory.moltenBuller.rawValue
+// This contacts with both other bullets and ice walls!
+self.physicsBody?.contactBitMask = [CollsionCategory.moltenBullet, CollisionCategory.iceWall].rawValue
+self.physicsBody?.collisionBitMask = self.physicsBody!.contactBitMask
+*/

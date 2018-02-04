@@ -19,6 +19,9 @@
 		06DFA2B61F096CBA0009A530 /* torpedo.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 06DFA2B31F0968BD0009A530 /* torpedo.mp3 */; };
 		06FA0DB61EE7628F0051FC68 /* Ship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FA0DB51EE7628F0051FC68 /* Ship.swift */; };
 		06FA0DB81EE763F50051FC68 /* Bullet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FA0DB71EE763F50051FC68 /* Bullet.swift */; };
+		57DA77C82026E6DE005A6C7B /* totem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57DA77C72026E6DE005A6C7B /* totem.swift */; };
+		57DA77CA20270371005A6C7B /* cactus.png in Resources */ = {isa = PBXBuildFile; fileRef = 57DA77C920270370005A6C7B /* cactus.png */; };
+		57DA77CC20270E82005A6C7B /* endGameWaWeWa.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 57DA77CB20270E82005A6C7B /* endGameWaWeWa.mp3 */; };
 		E7411A612026C5D500E5D0BE /* ch.png in Resources */ = {isa = PBXBuildFile; fileRef = E7411A602026C5D500E5D0BE /* ch.png */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +40,9 @@
 		06DFA2B31F0968BD0009A530 /* torpedo.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = torpedo.mp3; sourceTree = "<group>"; };
 		06FA0DB51EE7628F0051FC68 /* Ship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ship.swift; sourceTree = "<group>"; };
 		06FA0DB71EE763F50051FC68 /* Bullet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bullet.swift; sourceTree = "<group>"; };
+		57DA77C72026E6DE005A6C7B /* totem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = totem.swift; sourceTree = "<group>"; };
+		57DA77C920270370005A6C7B /* cactus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cactus.png; path = Assets.xcassets/cactus.png; sourceTree = "<group>"; };
+		57DA77CB20270E82005A6C7B /* endGameWaWeWa.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = endGameWaWeWa.mp3; path = Assets.xcassets/endGameWaWeWa.mp3; sourceTree = "<group>"; };
 		E7411A602026C5D500E5D0BE /* ch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ch.png; path = Assets.xcassets/ch.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -76,7 +82,9 @@
 				06325E371EE8420E00F0D093 /* explosion.scnp */,
 				06FA0DB71EE763F50051FC68 /* Bullet.swift */,
 				06FA0DB51EE7628F0051FC68 /* Ship.swift */,
+				57DA77CB20270E82005A6C7B /* endGameWaWeWa.mp3 */,
 				06C51BED1EE68B41006AC09A /* Main.storyboard */,
+				57DA77C920270370005A6C7B /* cactus.png */,
 				06C51BF01EE68B41006AC09A /* Assets.xcassets */,
 				E7411A602026C5D500E5D0BE /* ch.png */,
 				06C51BF21EE68B41006AC09A /* LaunchScreen.storyboard */,
@@ -84,6 +92,7 @@
 				06DFA2B21F0968BD0009A530 /* collision.mp3 */,
 				06DFA2B11F0968BD0009A530 /* explosion.mp3 */,
 				06DFA2B31F0968BD0009A530 /* torpedo.mp3 */,
+				57DA77C72026E6DE005A6C7B /* totem.swift */,
 			);
 			path = ARViewer;
 			sourceTree = "<group>";
@@ -148,8 +157,10 @@
 			files = (
 				06325E381EE8420E00F0D093 /* spark.png in Resources */,
 				06C51BF41EE68B41006AC09A /* LaunchScreen.storyboard in Resources */,
+				57DA77CC20270E82005A6C7B /* endGameWaWeWa.mp3 in Resources */,
 				06325E391EE8420E00F0D093 /* explosion.scnp in Resources */,
 				06DFA2B41F096CB40009A530 /* collision.mp3 in Resources */,
+				57DA77CA20270371005A6C7B /* cactus.png in Resources */,
 				06DFA2B51F096CB70009A530 /* explosion.mp3 in Resources */,
 				E7411A612026C5D500E5D0BE /* ch.png in Resources */,
 				06C51BF11EE68B41006AC09A /* Assets.xcassets in Resources */,
@@ -165,6 +176,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57DA77C82026E6DE005A6C7B /* totem.swift in Sources */,
 				06C51BEC1EE68B41006AC09A /* ViewController.swift in Sources */,
 				06FA0DB61EE7628F0051FC68 /* Ship.swift in Sources */,
 				06C51BE81EE68B41006AC09A /* AppDelegate.swift in Sources */,
@@ -308,7 +320,7 @@
 				DEVELOPMENT_TEAM = QZ62L8VY96;
 				INFOPLIST_FILE = ARViewer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = akin.test;
+				PRODUCT_BUNDLE_IDENTIFIER = alexeveritt.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -322,7 +334,7 @@
 				DEVELOPMENT_TEAM = QZ62L8VY96;
 				INFOPLIST_FILE = ARViewer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = akin.test;
+				PRODUCT_BUNDLE_IDENTIFIER = alexeveritt.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -1,33 +1,33 @@
 //
-//  Ship.swift
+//  totem.swift
 //  ARViewer
 //
-//  Created by Faris Sbahi on 6/6/17.
-//  Copyright © 2017 Faris Sbahi. All rights reserved.
+//  Created by Jakob Palmer on 2/4/18.
+//  Copyright © 2018 Faris Sbahi. All rights reserved.
 //
+
 
 import UIKit
 import SceneKit
 
 // Floating boxes that appear around you
-class Ship: SCNNode {
+class totem: SCNNode {
     override init() {
         super.init()
-        let box = SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0)
+        let box = SCNBox(width: 0.8, height: 5.5, length: 0.8, chamferRadius: 0)
         self.geometry = box
         let shape = SCNPhysicsShape(geometry: box, options: nil)
-        self.physicsBody = SCNPhysicsBody(type: .dynamic, shape: shape)
+        self.physicsBody = SCNPhysicsBody(type: .static, shape: shape)//.dynamic
         self.physicsBody?.isAffectedByGravity = false
         
         // see http://texnotes.me/post/5/ for details on collisions and bit masks
-        self.physicsBody?.categoryBitMask = CollisionCategory.ship.rawValue
-        //self.physicsBody?.contactTestBitMask = CollisionCategory.bullets.rawValue
+        self.physicsBody?.categoryBitMask = CollisionCategory.totem.rawValue
+        //--->? self.physicsBody?.contactTestBitMask = CollisionCategory.bullets.rawValue
         self.physicsBody?.contactTestBitMask = CollisionCategory.ship.rawValue
-        self.physicsBody?.collisionBitMask = CollisionCategory.totem.rawValue | CollisionCategory.ship.rawValue
         
         // add texture
         let material = SCNMaterial()
-        material.diffuse.contents = UIImage(named: "galaxy")
+        material.diffuse.contents = UIImage(named: "texture")
         self.geometry?.materials  = [material, material, material, material, material, material]
     }
     
@@ -37,3 +37,4 @@ class Ship: SCNNode {
     }
     
 }
+

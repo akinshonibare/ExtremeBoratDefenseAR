@@ -1,10 +1,7 @@
 //
 //  ViewController.swift
 //  ARViewer
-// http://texnotes.me/post/5/ for tutorial
-//
-//  Created by Faris Sbahi on 6/6/17.
-//  Copyright © 2017 Faris Sbahi. All rights reserved.
+//Authors: Jakob M Paulson-Palmer, Alex DaBoi, Nikolai theKing, Akin HP
 //
 
 import UIKit
@@ -15,26 +12,36 @@ import AVFoundation
 class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
+    @IBOutlet weak var GameOverText: UILabel!
     
     @IBOutlet weak var scoreLabel: UILabel!
     var startedFlag=false
     
+    @IBOutlet weak var welcomeText: UILabel!
     var player: AVAudioPlayer!
-    var enemyCount=10;
+    var enemyCount=25;
     
     private var userScore: Int = 0 {
         didSet {
             // ensure UI update runs on main thread
             DispatchQueue.main.async {
-                if(self.startedFlag==false){
-                    self.scoreLabel.text="Tap anywhere to start"
-                }
-                else{
                     self.scoreLabel.text = String(self.userScore)
-                }
+                
             }
         }
     }
+    
+    private var health: Int = 5 {
+        didSet {
+            // ensure UI update runs on main thread
+            DispatchQueue.main.async{
+                self.welcomeText.text = "Health: " + String(self.health)
+                
+            }
+        }
+    }
+    
+
     
     var timer = Timer()
     
@@ -56,21 +63,32 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         sceneView.scene = scene
         sceneView.scene.physicsWorld.contactDelegate = self
         
-        self.addNewShip()
-        self.addNewShip()
+        //self.addNewShip()
+        //self.addNewShip()
         
+        
+        let pos = SCNVector3(0,-1,0)
+        //let pos = SCNVector3.positionFromTransform(anchor.transform)
+        let totemBase = totem()
+        totemBase.position=pos
+        sceneView.scene.rootNode.addChildNode(totemBase)
+        
+        //wrapperNode.position = SCNVector3.positionFromTransform(anchor.transform)
+        //wrapperNode.addChildNode(Body)
+        //scnView.scene.rootNode.addChildNode(wrapperNode)
         self.userScore = 0
+        self.health = 5
+        self.GameOverText.text="Defend the cactus!!"
     }
     
     
     func scheduledTimerWithTimeInterval(){
         // Scheduling timer to Call the function "updateCounting" with the interval of 1 seconds
-        timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.updateCounting), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.updateCounting), userInfo: nil, repeats: true)
     }
     @objc func updateCounting(){
-        if(enemyCount>0){
+            if(enemyCount>0 && startedFlag==true){
             self.addNewShip()
-        NSLog("counting..")
         }
     }
     
@@ -145,7 +163,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     @IBAction func didTapScreen(_ sender: UITapGestureRecognizer) { // fire bullet in direction camera is facing
         
         if(self.startedFlag==false){
+            self.userScore=0
             self.startedFlag=true
+            self.addNewShip()
+            self.addNewShip()
+            self.addNewShip()
+            self.addNewShip()
+            self.addNewShip()
+            self.addNewShip()
+            self.GameOverText.text=""
         }
         else{
         // Play torpedo sound when bullet is launched
@@ -192,32 +218,40 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         enemyCount=enemyCount-1
         let cubeNode = Ship()
         
-        let posX:Float = 5.0
-        //let posX:Float = 10.0
-        let posZ = floatBetween(-10, and: 10 )
-        cubeNode.position = SCNVector3(posX, 0, posZ) // SceneKit/AR coordinates are in meters was -1
+        let rand = floatBetween(0, and: 2)
+        let posX:Float = 7.0
+        let posZ:Float = 7.0
         
-        //let (direction, pos) = self.getUserVector()
-        //cubeNode.position = position // SceneKit/AR coordinates are in meters
-        /*
-        let xVect = posX - pos.x
-        let zVect = posZ - pos.z
-        let dir = SCNVector3Make(xVect, 0, zVect)
-        */
-        let dir = SCNVector3Make(-posX / 5, 0, -posZ / 10)
+        
+        //let posX:Float = 10.0
+        if(rand>1){
+            let posZ = floatBetween(5, and: 10 )
+        }
+        else{
+            let posZ = floatBetween(-5, and: -10)
+        }
+        
+        cubeNode.position = SCNVector3(posZ, 0, posZ) // SceneKit/AR coordinates are in meters was -1
+        
+      
+        let dir = SCNVector3Make(-posZ / 8, 0, -posZ / 8)
         
         cubeNode.physicsBody?.applyForce(dir, asImpulse: true)
         //sceneView.scene.rootNode.addChildNode(bulletsNode)
         //session()
         
         sceneView.scene.rootNode.addChildNode(cubeNode)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 30, execute: {
+            self.removeNodeWithAnimation(cubeNode, explosion: false)
+        })
     }
     
     func removeNodeWithAnimation(_ node: SCNNode, explosion: Bool) {
         
         // Play collision sound for all collisions (bullet-bullet, etc.)
         
-        self.playSoundEffect(ofType: .collision)
+        //self.playSoundEffect(ofType: .collision)
         
         if explosion {
             
@@ -235,6 +269,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         // remove node
         node.removeFromParentNode()
+        self.enemyCount = self.enemyCount - 1
     }
     
     func getUserVector() -> (SCNVector3, SCNVector3) { // (direction, position)
@@ -257,7 +292,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         //print("did begin contact", contact.nodeA.physicsBody!.categoryBitMask, contact.nodeB.physicsBody!.categoryBitMask)
         
-        if contact.nodeA.physicsBody?.categoryBitMask == CollisionCategory.ship.rawValue || contact.nodeB.physicsBody?.categoryBitMask == CollisionCategory.ship.rawValue { // this conditional is not required--we've used the bit masks to ensure only one type of collision takes place--will be necessary as soon as more collisions are created/enabled
+        if ((contact.nodeA.physicsBody?.categoryBitMask == CollisionCategory.ship.rawValue && contact.nodeB.physicsBody?.categoryBitMask == CollisionCategory.bullets.rawValue)||(contact.nodeA.physicsBody?.categoryBitMask == CollisionCategory.bullets.rawValue && contact.nodeB.physicsBody?.categoryBitMask == CollisionCategory.ship.rawValue)) { // this conditional is not required--we've used the bit masks to ensure only one type of collision takes place--will be necessary as soon as more collisions are created/enabled
             
             print("Hit ship!")
             self.removeNodeWithAnimation(contact.nodeB, explosion: false) // remove the bullet
@@ -270,6 +305,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             })
             
         }
+        else if((contact.nodeA.physicsBody?.categoryBitMask == CollisionCategory.ship.rawValue && contact.nodeB.physicsBody?.categoryBitMask == CollisionCategory.totem.rawValue)||(contact.nodeA.physicsBody?.categoryBitMask == CollisionCategory.totem.rawValue && contact.nodeB.physicsBody?.categoryBitMask == CollisionCategory.ship.rawValue)) {
+            print("got hurt")
+            self.health = self.health - 1
+            
+            //LOSE CONDITION
+            if(self.health<=0){
+                self.playSoundEffect(ofType: .endGame)
+                startedFlag=false
+                self.GameOverText.text = "You Lost! Shutting down in 10 secs"
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: { // remove/replace ship after half a second to visualize collision
+                    exit(0)
+                })
+                
+            }
+            if(contact.nodeA.physicsBody?.categoryBitMask == CollisionCategory.totem.rawValue){
+                self.removeNodeWithAnimation(contact.nodeB, explosion: true)
+            } else {
+                self.removeNodeWithAnimation(contact.nodeA, explosion: true)
+            }
+        }
+        
     }
     
     
@@ -299,8 +356,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
 struct CollisionCategory: OptionSet {
     let rawValue: Int
     
-    static let bullets  = CollisionCategory(rawValue: 1 << 0) // 00...01
-    static let ship = CollisionCategory(rawValue: 1 << 1) // 00..10
+    
+    static let bullets  = CollisionCategory(rawValue: 2) // 00...01 00, 01, 10, 11
+    static let ship = CollisionCategory(rawValue: 3) // 00..10
+    static let totem = CollisionCategory(rawValue: 1)//
+ 
 }
 
 extension utsname {
@@ -325,4 +385,6 @@ enum SoundEffect: String {
     case explosion = "explosion"
     case collision = "collision"
     case torpedo = "torpedo"
+    case endGame = "endGameWaWeWa"
+    
 }
