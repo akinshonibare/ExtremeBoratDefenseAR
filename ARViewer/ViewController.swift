@@ -203,7 +203,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             
             // Play explosion sound for bullet-ship collisions
             
-            self.playSoundEffect(ofType: .explosion)
+            self.playSoundEffect(ofType: .veryNice)
             
             let particleSystem = SCNParticleSystem(named: "explosion", inDirectory: nil)
             let systemNode = SCNNode()
@@ -304,4 +304,5 @@ enum SoundEffect: String {
     case explosion = "explosion"
     case collision = "collision"
     case torpedo = "torpedo"
+    case veryNice = "VeryNice"
 }
