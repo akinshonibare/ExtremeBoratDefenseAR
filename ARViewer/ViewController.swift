@@ -13,6 +13,11 @@ import ARKit
 import AVFoundation
 
 class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate {
+    
+    var startedFlag=false
+    
+    
+    //END UI CODE
 
     @IBOutlet var sceneView: ARSCNView!
     
@@ -25,7 +30,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         didSet {
             // ensure UI update runs on main thread
             DispatchQueue.main.async {
+                if(self.startedFlag==true){
                 self.scoreLabel.text = String(self.userScore)
+
+                }
+                else{
+                    self.scoreLabel.text="Tap anywhere to start!"
+                }
             }
         }
     }
@@ -137,7 +148,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     @IBAction func didTapScreen(_ sender: UITapGestureRecognizer) { // fire bullet in direction camera is facing
         
         // Play torpedo sound when bullet is launched
-        
+        if(startedFlag==false){
+            startedFlag=true
+        }
+        else{
         self.playSoundEffect(ofType: .torpedo)
         
         let bulletsNode = Bullet()
@@ -150,7 +164,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         sceneView.scene.rootNode.addChildNode(bulletsNode)
         
         //addNewShip()
-        
+        }
     }
     
     // MARK: - Game Functionality
