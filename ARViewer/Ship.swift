@@ -13,7 +13,7 @@ import SceneKit
 class Ship: SCNNode {
     override init() {
         super.init()
-        let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+        let box = SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0)
         self.geometry = box
         let shape = SCNPhysicsShape(geometry: box, options: nil)
         self.physicsBody = SCNPhysicsBody(type: .dynamic, shape: shape)

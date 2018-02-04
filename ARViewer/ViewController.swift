@@ -31,6 +31,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     }
     
     var timer = Timer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -49,6 +50,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         sceneView.scene = scene
         sceneView.scene.physicsWorld.contactDelegate = self
         
+        self.addNewShip()
         self.addNewShip()
         
         self.userScore = 0
@@ -149,7 +151,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         bulletsNode.physicsBody?.applyForce(bulletDirection, asImpulse: true)
         sceneView.scene.rootNode.addChildNode(bulletsNode)
         
-        //addNewShip()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: {
+            self.removeNodeWithAnimation(bulletsNode, explosion: false)
+        })
         
     }
     
@@ -177,18 +181,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         enemyCount=enemyCount-1
         let cubeNode = Ship()
         
-        let posX = floatBetween(-1.5, and: 1.5)
+        let posX:Float = 5.0
         //let posX:Float = 10.0
-        let posY = floatBetween(-1.5, and: 1.5  )
-        cubeNode.position = SCNVector3(posX, posY, -1) // SceneKit/AR coordinates are in meters
+        let posZ = floatBetween(-10, and: 10 )
+        cubeNode.position = SCNVector3(posX, 0, posZ) // SceneKit/AR coordinates are in meters was -1
         
-        let (direction, position) = self.getUserVector()
+        //let (direction, pos) = self.getUserVector()
         //cubeNode.position = position // SceneKit/AR coordinates are in meters
+        /*
+        let xVect = posX - pos.x
+        let zVect = posZ - pos.z
+        let dir = SCNVector3Make(xVect, 0, zVect)
+        */
+        let dir = SCNVector3Make(-posX / 5, 0, -posZ / 10)
         
-        let bulletDirection = direction
-        cubeNode.physicsBody?.applyForce(bulletDirection, asImpulse: false)
+        cubeNode.physicsBody?.applyForce(dir, asImpulse: true)
         //sceneView.scene.rootNode.addChildNode(bulletsNode)
-        
+        //session()
         
         sceneView.scene.rootNode.addChildNode(cubeNode)
     }
