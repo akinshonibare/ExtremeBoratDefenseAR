@@ -17,6 +17,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     @IBOutlet var sceneView: ARSCNView!
     
     @IBOutlet weak var scoreLabel: UILabel!
+    var startedFlag=false
     
     var player: AVAudioPlayer!
     var enemyCount=10;
@@ -25,7 +26,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         didSet {
             // ensure UI update runs on main thread
             DispatchQueue.main.async {
-                self.scoreLabel.text = String(self.userScore)
+                if(self.startedFlag==false){
+                    self.scoreLabel.text="Tap anywhere to start"
+                }
+                else{
+                    self.scoreLabel.text = String(self.userScore)
+                }
             }
         }
     }
@@ -138,6 +144,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     @IBAction func didTapScreen(_ sender: UITapGestureRecognizer) { // fire bullet in direction camera is facing
         
+        if(self.startedFlag==false){
+            self.startedFlag=true
+        }
+        else{
         // Play torpedo sound when bullet is launched
         
         self.playSoundEffect(ofType: .torpedo)
@@ -154,7 +164,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: {
             self.removeNodeWithAnimation(bulletsNode, explosion: false)
         })
-        
+            
+        }
     }
     
     // MARK: - Game Functionality
@@ -245,6 +256,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         //print("did begin contact", contact.nodeA.physicsBody!.categoryBitMask, contact.nodeB.physicsBody!.categoryBitMask)
+        
         if contact.nodeA.physicsBody?.categoryBitMask == CollisionCategory.ship.rawValue || contact.nodeB.physicsBody?.categoryBitMask == CollisionCategory.ship.rawValue { // this conditional is not required--we've used the bit masks to ensure only one type of collision takes place--will be necessary as soon as more collisions are created/enabled
             
             print("Hit ship!")
