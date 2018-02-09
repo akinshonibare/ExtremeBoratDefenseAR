@@ -217,33 +217,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     func addNewShip() {
         enemyCount=enemyCount-1
-        let cubeNode = Ship()
+        var cubeNode = Ship()
         
-        let rand = floatBetween(0, and: 2)
-        let posX:Float = 7.0
-        let posZ:Float = 7.0
+        var rand = floatBetween(0, and: 2)
+        print(rand)
+        var posX:Float = 7.0
+        var posZ:Float = 7.0
         
         
         //let posX:Float = 10.0
         if(rand>0.5){
-            let posZ = floatBetween(5, and: 10 )
-            let posX = floatBetween(5, and: 10 )
+             posZ = floatBetween(5, and: 10 )
+             posX = floatBetween(5, and: 10 )
         }
         else if(rand>1){
-            let posZ = floatBetween(-5, and: -10)
-            let posX = floatBetween(5, and: 10 )
+            posZ = floatBetween(-5, and: -10)
+            posX = floatBetween(5, and: 10 )
         }else if(rand>1.5){
-            let posZ = floatBetween(-5, and: -10)
-            let posX = floatBetween(-5, and: -10 )
+            posZ = floatBetween(-5, and: -10)
+            posX = floatBetween(-5, and: -10 )
         } else {
-            let posZ = floatBetween(5, and: 10)
-            let posX = floatBetween(-5, and: -10 )
+            posZ = floatBetween(5, and: 10)
+            posX = floatBetween(-5, and: -10 )
         }
-        
+        print(posX)
+        print(posZ)
         cubeNode.position = SCNVector3(posX, 0, posZ) // SceneKit/AR coordinates are in meters was -1
         
       
-        let dir = SCNVector3Make(-posX / 8, 0, -posZ / 8)
+        var dir = SCNVector3Make(-posX / 8, 0, -posZ / 8)
         
         cubeNode.physicsBody?.applyForce(dir, asImpulse: true)
         //sceneView.scene.rootNode.addChildNode(bulletsNode)
@@ -324,7 +326,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
                 startedFlag=false
                 self.GameOverText.text = "You Lost! Shutting down in 10 secs"
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: { // remove/replace ship after half a second to visualize collision
+                DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: {
                     exit(0)
                 })
                 
